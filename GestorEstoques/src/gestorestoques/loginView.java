@@ -8,12 +8,12 @@ package gestorestoques;
  *
  * @author Ericz
  */
-public class janelaPrincipal extends javax.swing.JFrame {
+public class loginView extends javax.swing.JFrame {
 
     /**
      * Creates new form janelaPrincipal
      */
-    public janelaPrincipal() {
+    public loginView() {
         initComponents();
     }
 
@@ -137,7 +137,14 @@ public class janelaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_txt_passActionPerformed
 
     private void btn_loginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_loginActionPerformed
-        // TODO add your handling code here:
+        String user = txt_user.getText();
+        String pass = txt_pass.getText();
+        
+        if(user.equals("admin") && pass.equals("123")){
+            msg_erro.setText("BEM VINDO");
+        } else {
+            msg_erro.setText("USUÁRIO OU SENHA INCORRETOS");
+        }
     }//GEN-LAST:event_btn_loginActionPerformed
 
     /**
@@ -157,20 +164,21 @@ public class janelaPrincipal extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(janelaPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(loginView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(janelaPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(loginView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(janelaPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(loginView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(janelaPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(loginView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new janelaPrincipal().setVisible(true);
+                new loginView().setVisible(true);
             }
         });
     }
