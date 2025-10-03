@@ -4,6 +4,8 @@
  */
 package gestorestoques;
 
+import java.awt.Color;
+
 /**
  *
  * @author Ericz
@@ -15,6 +17,12 @@ public class loginView extends javax.swing.JFrame {
      */
     public loginView() {
         initComponents();
+        txt_user.setText("Insira seu nome de usuário");
+        txt_user.setForeground(Color.BLACK);
+
+        txt_pass.setText("Insira sua senha");
+        txt_pass.setForeground(Color.BLACK);
+        
     }
 
     /**
@@ -44,8 +52,23 @@ public class loginView extends javax.swing.JFrame {
         jLabel2.setText("USUÁRIO:");
 
         txt_user.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        txt_user.setText("Insira seu nome de usuário");
         txt_user.setActionCommand("<Not Set>");
+        txt_user.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txt_userFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txt_userFocusLost(evt);
+            }
+        });
+        txt_user.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txt_userMouseClicked(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                txt_userMousePressed(evt);
+            }
+        });
         txt_user.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txt_userActionPerformed(evt);
@@ -56,7 +79,16 @@ public class loginView extends javax.swing.JFrame {
         jLabel3.setText("SENHA:");
 
         txt_pass.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        txt_pass.setText("Insira sua senha de usuário");
+        txt_pass.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txt_passFocusLost(evt);
+            }
+        });
+        txt_pass.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                txt_passMousePressed(evt);
+            }
+        });
         txt_pass.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txt_passActionPerformed(evt);
@@ -79,12 +111,13 @@ public class loginView extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(60, 60, 60)
+                .addComponent(msg_erro)
+                .addContainerGap(335, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(77, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(171, 171, 171))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(txt_pass, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
@@ -93,17 +126,9 @@ public class loginView extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(btn_login, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(73, 73, 73))))
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(174, 174, 174)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(60, 60, 60)
-                        .addComponent(msg_erro)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -141,11 +166,49 @@ public class loginView extends javax.swing.JFrame {
         String pass = txt_pass.getText();
         
         if(user.equals("admin") && pass.equals("123")){
-            msg_erro.setText("BEM VINDO");
+            menuView menu = new menuView();
+            menu.setVisible(true);
+            this.dispose();
         } else {
             msg_erro.setText("USUÁRIO OU SENHA INCORRETOS");
         }
     }//GEN-LAST:event_btn_loginActionPerformed
+
+    private void txt_userFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txt_userFocusGained
+       
+    }//GEN-LAST:event_txt_userFocusGained
+
+    private void txt_userFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txt_userFocusLost
+        if (txt_user.getText().isEmpty()) {
+        txt_user.setText("Insira seu nome de usuário");
+        txt_user.setForeground(Color.BLACK);
+        }
+    }//GEN-LAST:event_txt_userFocusLost
+
+    private void txt_userMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txt_userMouseClicked
+        
+    }//GEN-LAST:event_txt_userMouseClicked
+
+    private void txt_userMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txt_userMousePressed
+        if (txt_user.getText().equals("Insira seu nome de usuário")) {
+            txt_user.setText("");
+            txt_user.setForeground(Color.BLACK);
+        }
+    }//GEN-LAST:event_txt_userMousePressed
+
+    private void txt_passMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txt_passMousePressed
+        if (txt_pass.getText().equals("Insira sua senha")) {
+            txt_pass.setText("");
+            txt_pass.setForeground(Color.BLACK);
+        }
+    }//GEN-LAST:event_txt_passMousePressed
+
+    private void txt_passFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txt_passFocusLost
+        if (txt_pass.getText().isEmpty()) {
+            txt_pass.setText("Insira sua senha");
+            txt_pass.setForeground(Color.GRAY);
+        }
+    }//GEN-LAST:event_txt_passFocusLost
 
     /**
      * @param args the command line arguments
