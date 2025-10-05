@@ -133,7 +133,7 @@ public class loginView extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(17, 17, 17)
+                .addGap(27, 27, 27)
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel2)
@@ -147,7 +147,7 @@ public class loginView extends javax.swing.JFrame {
                 .addComponent(btn_login)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(msg_erro)
-                .addContainerGap(77, Short.MAX_VALUE))
+                .addContainerGap(67, Short.MAX_VALUE))
         );
 
         pack();
@@ -180,8 +180,8 @@ public class loginView extends javax.swing.JFrame {
 
     private void txt_userFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txt_userFocusLost
         if (txt_user.getText().isEmpty()) {
-        txt_user.setText("Insira seu nome de usuário");
-        txt_user.setForeground(Color.BLACK);
+            txt_user.setText("Insira seu nome de usuário");
+            txt_user.setForeground(Color.BLACK);
         }
     }//GEN-LAST:event_txt_userFocusLost
 

@@ -128,6 +128,9 @@
           <Dimension value="[150, 35]"/>
         </Property>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_movimentacaoActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btn_relatorios">
       <Properties>
@@ -139,6 +142,9 @@
           <Dimension value="[150, 35]"/>
         </Property>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_relatoriosActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btn_deslogar">
       <Properties>
@@ -147,6 +153,9 @@
         </Property>
         <Property name="text" type="java.lang.String" value="SAIR"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_deslogarActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btn_gerencia">
       <Properties>

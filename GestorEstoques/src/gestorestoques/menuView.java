@@ -65,13 +65,28 @@ public class menuView extends javax.swing.JFrame {
         btn_movimentacao.setBackground(new java.awt.Color(255, 255, 0));
         btn_movimentacao.setText("MOVIMENTAÇÕES");
         btn_movimentacao.setPreferredSize(new java.awt.Dimension(150, 35));
+        btn_movimentacao.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_movimentacaoActionPerformed(evt);
+            }
+        });
 
         btn_relatorios.setBackground(new java.awt.Color(0, 255, 30));
         btn_relatorios.setText("RELATÓRIOS");
         btn_relatorios.setPreferredSize(new java.awt.Dimension(150, 35));
+        btn_relatorios.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_relatoriosActionPerformed(evt);
+            }
+        });
 
         btn_deslogar.setBackground(new java.awt.Color(255, 0, 0));
         btn_deslogar.setText("SAIR");
+        btn_deslogar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_deslogarActionPerformed(evt);
+            }
+        });
 
         btn_gerencia.setBackground(new java.awt.Color(0, 150, 150));
         btn_gerencia.setText("GERENCIAR USUÁRIOS");
@@ -127,16 +142,40 @@ public class menuView extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_cadastroFornecedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cadastroFornecedorActionPerformed
-        // TODO add your handling code here:
+        cadastroFornecedor cadastro = new cadastroFornecedor();
+        cadastro.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btn_cadastroFornecedorActionPerformed
 
     private void btn_gerenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_gerenciaActionPerformed
-        // TODO add your handling code here:
+        gestaoDeUser gestao = new gestaoDeUser();
+        gestao.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btn_gerenciaActionPerformed
 
     private void btn_cadastroProdutosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cadastroProdutosActionPerformed
-        // TODO add your handling code here:
+        CadastroProdutos cadastro = new CadastroProdutos();
+        cadastro.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btn_cadastroProdutosActionPerformed
+
+    private void btn_deslogarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_deslogarActionPerformed
+        loginView login = new loginView();
+        login.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btn_deslogarActionPerformed
+
+    private void btn_movimentacaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_movimentacaoActionPerformed
+        movimentacoes move = new movimentacoes();
+        move.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btn_movimentacaoActionPerformed
+
+    private void btn_relatoriosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_relatoriosActionPerformed
+        relatorios relato = new relatorios();
+        relato.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btn_relatoriosActionPerformed
 
     /**
      * @param args the command line arguments
