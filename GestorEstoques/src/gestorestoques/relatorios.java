@@ -22,8 +22,14 @@ public class relatorios extends javax.swing.JFrame {
     /**
      * Creates new form relatorios
      */
-    public relatorios() {
+    
+    private String perfil;
+    
+    public relatorios(String perfil) {
         initComponents();
+        
+        this.perfil=perfil;
+        
     }
 
     /**
@@ -142,7 +148,7 @@ public class relatorios extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_relatoriosVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_relatoriosVoltarActionPerformed
-        menuView menu = new menuView();
+        menuView menu = new menuView(this.perfil);
         menu.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btn_relatoriosVoltarActionPerformed
@@ -182,7 +188,7 @@ public class relatorios extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new relatorios().setVisible(true);
+                
             }
         });
     }

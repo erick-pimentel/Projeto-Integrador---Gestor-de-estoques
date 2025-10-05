@@ -4,7 +4,14 @@
  */
 package gestorestoques;
 
+import gestorestoques.menuView;
 import java.awt.Color;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -15,8 +22,27 @@ public class loginView extends javax.swing.JFrame {
     /**
      * Creates new form janelaPrincipal
      */
+    
+    Connection conn;
+    
+    private void conectar() {
+    String url = "jdbc:mysql://localhost:3306/gestor_estoque";
+    String dbUser = "root";
+    String dbPass = "1234";
+
+    try {
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        conn = DriverManager.getConnection(url, dbUser, dbPass);
+        System.out.println("✅ Conectado com sucesso!");
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Erro na conexão: " + e.getMessage());
+    }
+}
+    
     public loginView() {
         initComponents();
+        conectar();
+        
         txt_user.setText("Insira seu nome de usuário");
         txt_user.setForeground(Color.BLACK);
 
@@ -105,30 +131,30 @@ public class loginView extends javax.swing.JFrame {
 
         msg_erro.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         msg_erro.setForeground(new java.awt.Color(255, 0, 0));
-        msg_erro.setText(" ");
+        msg_erro.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(60, 60, 60)
-                .addComponent(msg_erro)
-                .addContainerGap(335, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(77, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(txt_pass, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
-                            .addComponent(txt_user))
-                        .addGap(109, 109, 109))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(btn_login, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(73, 73, 73))))
             .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 71, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(txt_pass, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
+                                    .addComponent(txt_user))
+                                .addGap(109, 109, 109))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(btn_login, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(73, 73, 73))))
+                    .addComponent(msg_erro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -147,7 +173,7 @@ public class loginView extends javax.swing.JFrame {
                 .addComponent(btn_login)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(msg_erro)
-                .addContainerGap(67, Short.MAX_VALUE))
+                .addContainerGap(92, Short.MAX_VALUE))
         );
 
         pack();
@@ -162,15 +188,52 @@ public class loginView extends javax.swing.JFrame {
     }//GEN-LAST:event_txt_passActionPerformed
 
     private void btn_loginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_loginActionPerformed
-        String user = txt_user.getText();
-        String pass = txt_pass.getText();
+        String user = txt_user.getText().trim();
+        String pass = txt_pass.getText().trim();
+        String perfil = "";
+
+        if(user.isEmpty() || pass.isEmpty()) {
+            msg_erro.setText("Preencha usuário e senha!");
+            return;
+        }
         
-        if(user.equals("admin") && pass.equals("123")){
-            menuView menu = new menuView();
+        if(user.equals("admin") && pass.equals("123")) {
+            perfil = "Administrador";
+            menuView menu = new menuView(perfil);
             menu.setVisible(true);
             this.dispose();
-        } else {
-            msg_erro.setText("USUÁRIO OU SENHA INCORRETOS");
+            return;
+        }
+        
+        String sql = "SELECT * FROM usuarios WHERE nome_usuario = ? AND senha_usuario = ?";
+
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, user);
+            stmt.setString(2, pass);
+            ResultSet rs = stmt.executeQuery();
+
+            if(rs.next()) {
+                boolean ativo = rs.getBoolean("usuario_ativo"); // se tiver esse campo
+                if(!ativo) {
+                    msg_erro.setText("Usuário inativo!");
+                    return;
+                }
+
+                perfil = rs.getString("perfil_usuario");
+                menuView menu = new menuView(perfil);
+                menu.setVisible(true);
+                this.dispose();
+
+            } else {
+                msg_erro.setText("Usuário ou senha incorretos!");
+            }
+
+            rs.close();
+            stmt.close();
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Erro ao conectar: " + e.getMessage());
         }
     }//GEN-LAST:event_btn_loginActionPerformed
 

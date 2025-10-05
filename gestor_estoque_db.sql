@@ -10,7 +10,7 @@ CREATE TABLE usuarios (
     nome_usuario VARCHAR(45) NOT NULL UNIQUE,
     email_usuario VARCHAR(45) NOT NULL UNIQUE,
     senha_usuario VARCHAR(100) NOT NULL, -- melhor deixar espaço p/ hash
-    perfil_usuario ENUM('Admin', 'Gerente', 'Funcionário') NOT NULL,
+    perfil_usuario ENUM('Administrador', 'Gestor', 'Operador de Estoque') NOT NULL,
     data_cadastro DATETIME DEFAULT CURRENT_TIMESTAMP,
     ultimo_acesso DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     usuario_ativo TINYINT(1) DEFAULT 1
@@ -46,7 +46,7 @@ CREATE TABLE fornecedores (
 -- ===========================
 CREATE TABLE produtos (
     id_produto INT AUTO_INCREMENT PRIMARY KEY,
-    id_usuario INT NOT NULL,
+    id_usuario INT,
     id_fornecedor INT NOT NULL,
     nome_produto VARCHAR(100) NOT NULL UNIQUE,
     codigo_produto VARCHAR(45) NOT NULL UNIQUE,
@@ -99,6 +99,12 @@ SELECT*FROM fornecedores;
 SELECT*FROM cadastro_de_produtos;
 SELECT*FROM movimentacao;
 SELECT*FROM relatorio;
+
+INSERT INTO usuarios (nome_usuario, email_usuario, senha_usuario, perfil_usuario, usuario_ativo)
+VALUES
+('adm', 'admin@empresa.com', '12', 'Admin', 1),
+('gestor', 'gestor@empresa.com', '123', 'Gestor', 1),
+('operador', 'operador@empresa.com', '123', 'Operador', 1);
 
 
 

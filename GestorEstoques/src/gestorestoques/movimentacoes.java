@@ -15,8 +15,14 @@ public class movimentacoes extends javax.swing.JFrame {
     /**
      * Creates new form movimentacoes
      */
-    public movimentacoes() {
+    
+    private String perfil;
+    
+    public movimentacoes(String perfil) {
         initComponents();
+        
+        this.perfil=perfil;
+        
         txt_movimentacoesTipo.setText("Entrada / Saida / Outro");
         txt_movimentacoesTipo.setForeground(Color.BLACK);
         
@@ -204,7 +210,7 @@ public class movimentacoes extends javax.swing.JFrame {
     }//GEN-LAST:event_btn_movimentacoesRegistrarActionPerformed
 
     private void btn_movimentacoesVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_movimentacoesVoltarActionPerformed
-        menuView menu = new menuView();
+        menuView menu = new menuView(this.perfil);
         menu.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btn_movimentacoesVoltarActionPerformed
@@ -295,7 +301,7 @@ public class movimentacoes extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new movimentacoes().setVisible(true);
+                
             }
         });
     }

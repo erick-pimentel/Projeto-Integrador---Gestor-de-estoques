@@ -15,8 +15,14 @@ public class CadastroProdutos extends javax.swing.JFrame {
     /**
      * Creates new form CadastroProdutos
      */
-    public CadastroProdutos() {
+    
+    private String perfil;
+    
+    public CadastroProdutos(String perfil) {
         initComponents();
+        
+        this.perfil=perfil;
+        
         txt_produtosNome.setText("Insira o nome do produto");
         txt_produtosNome.setForeground(Color.BLACK);
         
@@ -252,7 +258,7 @@ public class CadastroProdutos extends javax.swing.JFrame {
     }//GEN-LAST:event_txt_produtosNomeActionPerformed
 
     private void btn_produtosVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_produtosVoltarActionPerformed
-        menuView menu = new menuView();
+        menuView menu = new menuView(this.perfil);
         menu.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btn_produtosVoltarActionPerformed
@@ -371,7 +377,7 @@ public class CadastroProdutos extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new CadastroProdutos().setVisible(true);
+                
             }
         });
     }

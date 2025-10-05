@@ -5,6 +5,14 @@
 package gestorestoques;
 
 import java.awt.Color;
+import javax.swing.JOptionPane;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -15,8 +23,14 @@ public class cadastroFornecedor extends javax.swing.JFrame {
     /**
      * Creates new form cadastroFornecedor
      */
-    public cadastroFornecedor() {
+    
+    private String perfil;
+    
+    public cadastroFornecedor(String perfil) {
         initComponents();
+        
+        this.perfil=perfil;
+        
         txt_fornecedorNome.setText("Insira o nome do fornecedor");
         txt_fornecedorNome.setForeground(Color.BLACK);
         
@@ -113,6 +127,11 @@ public class cadastroFornecedor extends javax.swing.JFrame {
 
         btn_fornecedorExcluir.setBackground(new java.awt.Color(255, 0, 0));
         btn_fornecedorExcluir.setText("EXCLUIR");
+        btn_fornecedorExcluir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_fornecedorExcluirActionPerformed(evt);
+            }
+        });
 
         btn_fornecedorVoltar.setBackground(new java.awt.Color(0, 200, 0));
         btn_fornecedorVoltar.setText("VOLTAR");
@@ -124,9 +143,19 @@ public class cadastroFornecedor extends javax.swing.JFrame {
 
         btn_fornecedorCadastrar.setBackground(new java.awt.Color(0, 255, 30));
         btn_fornecedorCadastrar.setText("CADASTRAR");
+        btn_fornecedorCadastrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_fornecedorCadastrarActionPerformed(evt);
+            }
+        });
 
         btn_fornecedorEditar1.setBackground(new java.awt.Color(0, 255, 255));
         btn_fornecedorEditar1.setText("EDITAR");
+        btn_fornecedorEditar1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_fornecedorEditar1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -195,7 +224,7 @@ public class cadastroFornecedor extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_fornecedorVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_fornecedorVoltarActionPerformed
-        menuView menu = new menuView();
+        menuView menu = new menuView(this.perfil);
         menu.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btn_fornecedorVoltarActionPerformed
@@ -256,6 +285,174 @@ public class cadastroFornecedor extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_txt_fornecedorEmailMousePressed
 
+    private void btn_fornecedorCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_fornecedorCadastrarActionPerformed
+       String nome = txt_fornecedorNome.getText().trim();
+       String cnpj = txt_fornecedorCnpj.getText().trim();
+       String email = txt_fornecedorEmail.getText().trim();
+       String contato = txt_fornecedorContato.getText().trim();
+       
+       if(nome.isEmpty() || cnpj.isEmpty() || email.isEmpty() || contato.isEmpty()){
+           JOptionPane.showMessageDialog(this, "Preencha todos os campos!");
+           return;
+       }
+       
+       Connection conn = null;
+       PreparedStatement pst = null;
+       ResultSet rs = null;
+       
+       try {
+           conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/gestor_estoque", "root", "1234");
+
+            // Verifica se o fornecedor já existe pelo CNPJ
+            String sqlVerificar = "SELECT * FROM fornecedores WHERE cnpj_fornecedor = ?";
+            pst = conn.prepareStatement(sqlVerificar);
+            pst.setString(1, cnpj);
+            rs = pst.executeQuery();
+
+            if (rs.next()) {
+                JOptionPane.showMessageDialog(this, "Fornecedor já cadastrado!");
+            } else {
+                // Inserir novo fornecedor
+                String sqlInserir = "INSERT INTO fornecedores (nome_fornecedor, cnpj_fornecedor, email_fornecedor, contato_fornecedor) VALUES (?, ?, ?, ?)";
+                pst = conn.prepareStatement(sqlInserir);
+                pst.setString(1, nome);
+                pst.setString(2, cnpj);
+                pst.setString(3, email);
+                pst.setString(4, contato);
+                pst.executeUpdate();
+
+                JOptionPane.showMessageDialog(this, "Fornecedor cadastrado com sucesso!");
+
+                // Limpa campos
+                txt_fornecedorNome.setText("");
+                txt_fornecedorCnpj.setText("");
+                txt_fornecedorEmail.setText("");
+                txt_fornecedorContato.setText("");
+                
+            }
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Erro ao cadastrar fornecedor: " + ex.getMessage());
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (pst != null) pst.close();
+                if (conn != null) conn.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }//GEN-LAST:event_btn_fornecedorCadastrarActionPerformed
+
+    private void btn_fornecedorEditar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_fornecedorEditar1ActionPerformed
+        String busca = JOptionPane.showInputDialog(this, "Informe o CNPJ ou Nome do fornecedor que deseja editar:");
+        
+        String url = "jdbc:mysql://localhost:3306/gestor_estoque"; 
+        String usuario = "root"; 
+        String senha = "1234";   
+
+        Connection conn;
+        try {
+            conn = DriverManager.getConnection(url, usuario, senha);
+            String sql = "SELECT * FROM fornecedores WHERE cnpj_fornecedor = ? OR nome_fornecedor = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, busca);
+            ps.setString(2, busca);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                // Fornecedor encontrado, pergunta o que deseja editar
+                String[] opcoes = {"Nome", "CNPJ", "Email", "Contato"};
+                String campo = (String) JOptionPane.showInputDialog(
+                        this, 
+                        "Selecione o campo que deseja editar:", 
+                        "Editar fornecedor", 
+                        JOptionPane.QUESTION_MESSAGE, 
+                        null, 
+                        opcoes, 
+                        opcoes[0]);
+
+                if (campo != null) {
+                    String novoValor = JOptionPane.showInputDialog(this, "Informe o novo valor para " + campo + ":");
+
+                    if (novoValor != null && !novoValor.trim().isEmpty()) {
+                        String colunaDB = switch(campo) {
+                            case "Nome" -> "nome_fornecedor";
+                            case "CNPJ" -> "cnpj_fornecedor";
+                            case "Email" -> "email_fornecedor";
+                            case "Contato" -> "contato_fornecedor";
+                            default -> "";
+                        };
+
+                        String sqlUpdate = "UPDATE fornecedores SET " + colunaDB + " = ? WHERE id_fornecedor = ?";
+                        PreparedStatement psUpdate = conn.prepareStatement(sqlUpdate);
+                        psUpdate.setString(1, novoValor);
+                        psUpdate.setInt(2, rs.getInt("id_fornecedor"));
+                        psUpdate.executeUpdate();
+
+                        JOptionPane.showMessageDialog(this, "Fornecedor atualizado com sucesso!");
+                    }
+                }
+
+            } else {
+                JOptionPane.showMessageDialog(this, "Fornecedor não encontrado!");
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("Erro ao conectar: " + e.getMessage());
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Erro ao acessar o banco de dados.");
+        }
+    }//GEN-LAST:event_btn_fornecedorEditar1ActionPerformed
+
+    private void btn_fornecedorExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_fornecedorExcluirActionPerformed
+        
+        String url = "jdbc:mysql://localhost:3306/gestor_estoque"; 
+        String usuario = "root"; 
+        String senha = "1234";   
+
+        Connection conn;
+        
+        if ("Administrador".equals(perfil)){
+           String dado = JOptionPane.showInputDialog(this, "Informe o CNPJ ou Nome do fornecedor a ser excluído:");
+
+            if(dado != null && !dado.trim().isEmpty()){
+                int confirm = JOptionPane.showConfirmDialog(this, 
+                                "Tem certeza que deseja excluir o fornecedor: " + dado + "?",
+                                "Confirmar exclusão",
+                                JOptionPane.YES_NO_OPTION);
+
+                if(confirm == JOptionPane.YES_OPTION){
+                    String sql = "DELETE FROM fornecedores WHERE CNPJ_fornecedor = ? OR nome_fornecedor = ?";
+
+                    try {
+
+                        conn = DriverManager.getConnection(url, usuario, senha);
+                        PreparedStatement pst = conn.prepareStatement(sql);
+                        
+                        pst.setString(1, dado);
+                        pst.setString(2, dado);
+
+                        int linhasAfetadas = pst.executeUpdate();
+
+                        if(linhasAfetadas > 0){
+                            JOptionPane.showMessageDialog(this, "Fornecedor excluído com sucesso!");
+                        } else {
+                            JOptionPane.showMessageDialog(this, "Fornecedor não encontrado.");
+                        }
+
+                    } catch(SQLException e){
+                        e.printStackTrace();
+                        JOptionPane.showMessageDialog(this, "Erro ao acessar o banco: " + e.getMessage());
+                    }
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Você não tem permissão para excluir um fornecedor.");
+        }
+    }//GEN-LAST:event_btn_fornecedorExcluirActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -286,7 +483,7 @@ public class cadastroFornecedor extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new cadastroFornecedor().setVisible(true);
+                
             }
         });
     }

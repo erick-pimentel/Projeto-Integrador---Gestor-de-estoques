@@ -35,9 +35,13 @@ public class gestaoDeUser extends javax.swing.JFrame {
     String user = "root"; // seu usuário
     String password = "1234"; // sua senha
     Connection conn;
+    private String perfil;
     
-    public gestaoDeUser() {
+    public gestaoDeUser(String perfil) {
         initComponents();
+        
+        this.perfil=perfil;
+        
         conectar();
         carregarUsuarios();
         adicionarBotoesNaTabela();
@@ -187,7 +191,7 @@ public class gestaoDeUser extends javax.swing.JFrame {
         tableGestao = new javax.swing.JTable();
         btn_userAdd = new javax.swing.JButton();
         btn_userEdit = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        btn_menuVoltar = new javax.swing.JButton();
         comboFiltro = new javax.swing.JComboBox<>();
         btn_deleteUser = new javax.swing.JButton();
 
@@ -218,15 +222,15 @@ public class gestaoDeUser extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setBackground(new java.awt.Color(0, 255, 0));
-        jButton1.setText("VOLTAR");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btn_menuVoltar.setBackground(new java.awt.Color(0, 255, 0));
+        btn_menuVoltar.setText("VOLTAR");
+        btn_menuVoltar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btn_menuVoltarActionPerformed(evt);
             }
         });
 
-        comboFiltro.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Todos", "Admin", "Gerente", "Funcionário" }));
+        comboFiltro.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Todos", "Administrador", "Gestor", "Operador de estoque" }));
         comboFiltro.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 comboFiltroActionPerformed(evt);
@@ -254,7 +258,7 @@ public class gestaoDeUser extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(comboFiltro, 0, 103, Short.MAX_VALUE)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(btn_menuVoltar, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(btn_userAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -271,7 +275,7 @@ public class gestaoDeUser extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(jButton1)
+                    .addComponent(btn_menuVoltar)
                     .addComponent(comboFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -343,7 +347,7 @@ public class gestaoDeUser extends javax.swing.JFrame {
             String senha = JOptionPane.showInputDialog(this, "Senha do usuário:");
             if (senha == null || senha.trim().isEmpty()) return;
 
-            String perfil = JOptionPane.showInputDialog(this, "Perfil (Admin/Gerente/Funcionário):");
+            String perfil = JOptionPane.showInputDialog(this, "Perfil (Administrador/Gestor/Operador de estoque):");
             if (perfil == null || perfil.trim().isEmpty()) return;
 
             boolean ativo = JOptionPane.showConfirmDialog(this, "Ativo?", "Status", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
@@ -369,11 +373,11 @@ public class gestaoDeUser extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btn_userAddActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        menuView menu = new menuView();
+    private void btn_menuVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_menuVoltarActionPerformed
+        menuView menu = new menuView(this.perfil);
         menu.setVisible(true);
         this.dispose();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btn_menuVoltarActionPerformed
 
     private void comboFiltroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboFiltroActionPerformed
         String perfilSelecionado = comboFiltro.getSelectedItem().toString();
@@ -477,17 +481,17 @@ public class gestaoDeUser extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new gestaoDeUser().setVisible(true);
+                
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_deleteUser;
+    private javax.swing.JButton btn_menuVoltar;
     private javax.swing.JButton btn_userAdd;
     private javax.swing.JButton btn_userEdit;
     private javax.swing.JComboBox<String> comboFiltro;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable tableGestao;

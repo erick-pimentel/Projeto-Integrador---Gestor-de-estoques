@@ -1,5 +1,7 @@
 package gestorestoques;
 
+import javax.swing.JOptionPane;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
@@ -14,8 +16,16 @@ public class menuView extends javax.swing.JFrame {
     /**
      * Creates new form menuView
      */
-    public menuView() {
+    
+    private String perfil;
+    
+    public menuView(String perfil) {
         initComponents();
+        if (perfil == null) {
+            this.perfil = ""; // perfil vazio como padrão
+        } else {
+            this.perfil = perfil;
+        }  
     }
 
     /**
@@ -142,21 +152,33 @@ public class menuView extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_cadastroFornecedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cadastroFornecedorActionPerformed
-        cadastroFornecedor cadastro = new cadastroFornecedor();
-        cadastro.setVisible(true);
-        this.dispose();
+        if ("Administrador".equals(perfil) || "Operador de Estoque".equals(perfil)){
+             cadastroFornecedor cadastro = new cadastroFornecedor(this.perfil);
+            cadastro.setVisible(true);
+            this.dispose();
+        } else {
+            JOptionPane.showMessageDialog(this, "Você não tem permissão para acessar esta funcionalidade.");
+        }
     }//GEN-LAST:event_btn_cadastroFornecedorActionPerformed
 
     private void btn_gerenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_gerenciaActionPerformed
-        gestaoDeUser gestao = new gestaoDeUser();
-        gestao.setVisible(true);
-        this.dispose();
+        if ("Administrador".equals(perfil)){
+            gestaoDeUser gestao = new gestaoDeUser(this.perfil);
+            gestao.setVisible(true);
+            this.dispose();
+        } else {
+            JOptionPane.showMessageDialog(this, "Você não tem permissão para acessar esta funcionalidade.");
+        }    
     }//GEN-LAST:event_btn_gerenciaActionPerformed
 
     private void btn_cadastroProdutosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cadastroProdutosActionPerformed
-        CadastroProdutos cadastro = new CadastroProdutos();
-        cadastro.setVisible(true);
-        this.dispose();
+        if ("Administrador".equals(perfil) || "Operador de Estoque".equals(perfil)){
+            CadastroProdutos cadastro = new CadastroProdutos(perfil);
+            cadastro.setVisible(true);
+            this.dispose();
+        } else {
+            JOptionPane.showMessageDialog(this, "Você não tem permissão para acessar esta funcionalidade.");
+        }  
     }//GEN-LAST:event_btn_cadastroProdutosActionPerformed
 
     private void btn_deslogarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_deslogarActionPerformed
@@ -166,15 +188,23 @@ public class menuView extends javax.swing.JFrame {
     }//GEN-LAST:event_btn_deslogarActionPerformed
 
     private void btn_movimentacaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_movimentacaoActionPerformed
-        movimentacoes move = new movimentacoes();
-        move.setVisible(true);
-        this.dispose();
+        if ("Administrador".equals(perfil) || "Gestor".equals(perfil)){
+            movimentacoes move = new movimentacoes(this.perfil);
+            move.setVisible(true);
+            this.dispose();
+        } else {
+            JOptionPane.showMessageDialog(this, "Você não tem permissão para acessar esta funcionalidade.");
+        }
     }//GEN-LAST:event_btn_movimentacaoActionPerformed
 
     private void btn_relatoriosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_relatoriosActionPerformed
-        relatorios relato = new relatorios();
-        relato.setVisible(true);
-        this.dispose();
+        if ("Administrador".equals(perfil) || "Gestor".equals(perfil)){
+            relatorios relato = new relatorios(this.perfil);
+            relato.setVisible(true);
+            this.dispose();
+        } else {
+            JOptionPane.showMessageDialog(this, "Você não tem permissão para acessar esta funcionalidade.");
+        } 
     }//GEN-LAST:event_btn_relatoriosActionPerformed
 
     /**
@@ -207,7 +237,7 @@ public class menuView extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new menuView().setVisible(true);
+                
             }
         });
     }
