@@ -18,14 +18,19 @@ public class menuView extends javax.swing.JFrame {
      */
     
     private String perfil;
+    private int idUsuario;
     
-    public menuView(String perfil) {
+    public menuView(String perfil, int idUsuario) {
         initComponents();
+        
         if (perfil == null) {
             this.perfil = ""; // perfil vazio como padrão
         } else {
             this.perfil = perfil;
         }  
+        
+        this.idUsuario = idUsuario;
+        
     }
 
     /**
@@ -153,7 +158,7 @@ public class menuView extends javax.swing.JFrame {
 
     private void btn_cadastroFornecedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cadastroFornecedorActionPerformed
         if ("Administrador".equals(perfil) || "Operador de Estoque".equals(perfil)){
-             cadastroFornecedor cadastro = new cadastroFornecedor(this.perfil);
+             cadastroFornecedor cadastro = new cadastroFornecedor(this.perfil, this.idUsuario);
             cadastro.setVisible(true);
             this.dispose();
         } else {
@@ -163,7 +168,7 @@ public class menuView extends javax.swing.JFrame {
 
     private void btn_gerenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_gerenciaActionPerformed
         if ("Administrador".equals(perfil)){
-            gestaoDeUser gestao = new gestaoDeUser(this.perfil);
+            gestaoDeUser gestao = new gestaoDeUser(this.perfil, this.idUsuario);
             gestao.setVisible(true);
             this.dispose();
         } else {
@@ -173,7 +178,7 @@ public class menuView extends javax.swing.JFrame {
 
     private void btn_cadastroProdutosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cadastroProdutosActionPerformed
         if ("Administrador".equals(perfil) || "Operador de Estoque".equals(perfil)){
-            CadastroProdutos cadastro = new CadastroProdutos(perfil);
+            CadastroProdutos cadastro = new CadastroProdutos(this.perfil, this.idUsuario);
             cadastro.setVisible(true);
             this.dispose();
         } else {
@@ -189,7 +194,7 @@ public class menuView extends javax.swing.JFrame {
 
     private void btn_movimentacaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_movimentacaoActionPerformed
         if ("Administrador".equals(perfil) || "Gestor".equals(perfil)){
-            movimentacoes move = new movimentacoes(this.perfil);
+            movimentacoes move = new movimentacoes(this.perfil, this.idUsuario);
             move.setVisible(true);
             this.dispose();
         } else {
@@ -199,7 +204,7 @@ public class menuView extends javax.swing.JFrame {
 
     private void btn_relatoriosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_relatoriosActionPerformed
         if ("Administrador".equals(perfil) || "Gestor".equals(perfil)){
-            relatorios relato = new relatorios(this.perfil);
+            relatorios relato = new relatorios(this.perfil, this.idUsuario);
             relato.setVisible(true);
             this.dispose();
         } else {

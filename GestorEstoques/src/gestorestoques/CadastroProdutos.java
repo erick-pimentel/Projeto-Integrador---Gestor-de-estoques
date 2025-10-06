@@ -5,6 +5,17 @@
 package gestorestoques;
 
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.FocusEvent;
+import java.awt.event.MouseEvent;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -16,12 +27,15 @@ public class CadastroProdutos extends javax.swing.JFrame {
      * Creates new form CadastroProdutos
      */
     
-    private String perfil;
-    
-    public CadastroProdutos(String perfil) {
+     private String perfil; 
+     private int idUsuario;
+     
+    public CadastroProdutos(String perfil, int idUsuario) {
         initComponents();
         
         this.perfil=perfil;
+        this.idUsuario=idUsuario;
+        
         
         txt_produtosNome.setText("Insira o nome do produto");
         txt_produtosNome.setForeground(Color.BLACK);
@@ -40,7 +54,9 @@ public class CadastroProdutos extends javax.swing.JFrame {
         
         txt_produtosValidade.setText("Insira o prazo de validade");
         txt_produtosValidade.setForeground(Color.BLACK);
-                
+        
+        txt_produtosQuantidade.setText("Insira a quantidade");
+        txt_produtosQuantidade.setForeground(Color.BLACK);         
     }
 
     /**
@@ -69,6 +85,8 @@ public class CadastroProdutos extends javax.swing.JFrame {
         btn_produtosExcluir = new javax.swing.JButton();
         btn_produtosCadastrar = new javax.swing.JButton();
         btn_produtosVoltar = new javax.swing.JButton();
+        jLabel8 = new javax.swing.JLabel();
+        txt_produtosQuantidade = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -160,18 +178,51 @@ public class CadastroProdutos extends javax.swing.JFrame {
 
         btn_produtosEditar.setBackground(new java.awt.Color(0, 255, 255));
         btn_produtosEditar.setText("EDITAR");
+        btn_produtosEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_produtosEditarActionPerformed(evt);
+            }
+        });
 
         btn_produtosExcluir.setBackground(new java.awt.Color(255, 0, 0));
         btn_produtosExcluir.setText("EXCLUIR");
+        btn_produtosExcluir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_produtosExcluirActionPerformed(evt);
+            }
+        });
 
         btn_produtosCadastrar.setBackground(new java.awt.Color(0, 255, 30));
         btn_produtosCadastrar.setText("CADASTRAR");
+        btn_produtosCadastrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_produtosCadastrarActionPerformed(evt);
+            }
+        });
 
         btn_produtosVoltar.setBackground(new java.awt.Color(0, 200, 0));
         btn_produtosVoltar.setText("VOLTAR");
         btn_produtosVoltar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_produtosVoltarActionPerformed(evt);
+            }
+        });
+
+        jLabel8.setText("QUANTIDADE:");
+
+        txt_produtosQuantidade.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txt_produtosQuantidadeFocusLost(evt);
+            }
+        });
+        txt_produtosQuantidade.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                txt_produtosQuantidadeMousePressed(evt);
+            }
+        });
+        txt_produtosQuantidade.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txt_produtosQuantidadeActionPerformed(evt);
             }
         });
 
@@ -182,17 +233,6 @@ public class CadastroProdutos extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btn_produtosCadastrar, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btn_produtosVoltar, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)
-                            .addComponent(btn_produtosEditar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(18, 18, 18)
-                        .addComponent(btn_produtosExcluir, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel4)
@@ -200,7 +240,8 @@ public class CadastroProdutos extends javax.swing.JFrame {
                             .addComponent(jLabel2)
                             .addComponent(jLabel5)
                             .addComponent(jLabel6)
-                            .addComponent(jLabel7))
+                            .addComponent(jLabel7)
+                            .addComponent(jLabel8))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(txt_produtosValidade, javax.swing.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE)
@@ -208,13 +249,25 @@ public class CadastroProdutos extends javax.swing.JFrame {
                             .addComponent(txt_produtosNome)
                             .addComponent(txt_produtosCodigo)
                             .addComponent(txt_produtosCompra)
-                            .addComponent(txt_produtosVenda, javax.swing.GroupLayout.Alignment.TRAILING))))
+                            .addComponent(txt_produtosVenda, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(txt_produtosQuantidade)))
+                    .addComponent(jLabel1)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btn_produtosCadastrar, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(12, 12, 12)
+                        .addComponent(btn_produtosEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btn_produtosExcluir, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(94, 94, 94)
+                .addComponent(btn_produtosVoltar, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(18, 18, 18)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -242,11 +295,15 @@ public class CadastroProdutos extends javax.swing.JFrame {
                     .addComponent(txt_produtosValidade))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btn_produtosCadastrar, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_produtosExcluir, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_produtosEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel8)
+                    .addComponent(txt_produtosQuantidade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btn_produtosExcluir)
+                    .addComponent(btn_produtosCadastrar)
+                    .addComponent(btn_produtosEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(btn_produtosVoltar, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btn_produtosVoltar, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -258,7 +315,7 @@ public class CadastroProdutos extends javax.swing.JFrame {
     }//GEN-LAST:event_txt_produtosNomeActionPerformed
 
     private void btn_produtosVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_produtosVoltarActionPerformed
-        menuView menu = new menuView(this.perfil);
+        menuView menu = new menuView(this.perfil,this.idUsuario);
         menu.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btn_produtosVoltarActionPerformed
@@ -347,6 +404,281 @@ public class CadastroProdutos extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_txt_produtosValidadeMousePressed
 
+    private void btn_produtosCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_produtosCadastrarActionPerformed
+        String nome = txt_produtosNome.getText().trim();
+        String codigo = txt_produtosCodigo.getText().trim();
+        String compra = txt_produtosCompra.getText().trim();
+        String venda = txt_produtosVenda.getText().trim();
+        String fornecedorNome = txt_produtosFornecedor.getText().trim();
+        String validade = txt_produtosValidade.getText().trim();
+        String quantidade = txt_produtosQuantidade.getText().trim();
+
+        if (nome.isEmpty() || codigo.isEmpty() || compra.isEmpty() || venda.isEmpty() ||
+            fornecedorNome.isEmpty() || validade.isEmpty() || quantidade.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Preencha todos os campos!");
+            return;
+        }
+
+        Connection conn = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+
+        try {
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/gestor_estoque", "root", "1234");
+
+            // 1️⃣ Pegar o id do fornecedor
+            String sqlFornecedor = "SELECT id_fornecedor FROM fornecedores WHERE nome_fornecedor = ?";
+            pst = conn.prepareStatement(sqlFornecedor);
+            pst.setString(1, fornecedorNome);
+            rs = pst.executeQuery();
+
+            if (!rs.next()) {
+                JOptionPane.showMessageDialog(this, "Fornecedor não encontrado. Cadastre o fornecedor primeiro.");
+                return;
+            }
+            int idFornecedor = rs.getInt("id_fornecedor");
+            rs.close();
+            pst.close();
+
+            // 2️⃣ Verificar se o produto já existe
+            String sqlVerificar = "SELECT * FROM produtos WHERE codigo_produto = ?";
+            pst = conn.prepareStatement(sqlVerificar);
+            pst.setString(1, codigo);
+            rs = pst.executeQuery();
+
+            if (rs.next()) {
+                JOptionPane.showMessageDialog(this, "Produto já cadastrado!");
+            } else {
+                rs.close();
+                pst.close();
+
+                // 3️⃣ Converter validade
+                java.sql.Date sqlDate;
+                try {
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                    java.util.Date utilDate = sdf.parse(validade);
+                    sqlDate = new java.sql.Date(utilDate.getTime());
+                } catch (ParseException e) {
+                    JOptionPane.showMessageDialog(this, "Data inválida! Use dd/MM/yyyy");
+                    return;
+                }
+
+                // 4️⃣ Converter quantidade e valores
+                int qtd;
+                java.math.BigDecimal valorCompra;
+                java.math.BigDecimal valorVenda;
+                try {
+                    qtd = Integer.parseInt(quantidade);
+                    valorCompra = new java.math.BigDecimal(compra);
+                    valorVenda = new java.math.BigDecimal(venda);
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(this, "Preencha corretamente valores numéricos!");
+                    return;
+                }
+
+                // 5️⃣ Inserir produto com id_usuario
+                int idUsuario = this.idUsuario; // 🔹 ID do usuário logado
+                String sqlInserir = "INSERT INTO produtos (id_usuario, id_fornecedor, nome_produto, codigo_produto, quantidade_estoque, valor_compra, valor_venda, validade_produto) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                pst = conn.prepareStatement(sqlInserir);
+                pst.setInt(1, idUsuario);       // id_usuario
+                pst.setInt(2, idFornecedor);    // id_fornecedor
+                pst.setString(3, nome);
+                pst.setString(4, codigo);
+                pst.setInt(5, qtd);
+                pst.setBigDecimal(6, valorCompra);
+                pst.setBigDecimal(7, valorVenda);
+                pst.setDate(8, sqlDate);
+
+                pst.executeUpdate();
+                JOptionPane.showMessageDialog(this, "Produto cadastrado com sucesso!");
+
+                // Limpar campos
+                txt_produtosNome.setText("");
+                txt_produtosCodigo.setText("");
+                txt_produtosCompra.setText("");
+                txt_produtosVenda.setText("");
+                txt_produtosFornecedor.setText("");
+                txt_produtosValidade.setText("");
+                txt_produtosQuantidade.setText("");
+            }
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Erro ao cadastrar produto: " + ex.getMessage());
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (pst != null) pst.close();
+                if (conn != null) conn.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }//GEN-LAST:event_btn_produtosCadastrarActionPerformed
+
+    private void txt_produtosQuantidadeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_produtosQuantidadeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_produtosQuantidadeActionPerformed
+
+    private void txt_produtosQuantidadeFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txt_produtosQuantidadeFocusLost
+        if (txt_produtosQuantidade.getText().isEmpty()) {
+            txt_produtosQuantidade.setText("Insira a quantidade");
+            txt_produtosQuantidade.setForeground(Color.BLACK);
+        }
+    }//GEN-LAST:event_txt_produtosQuantidadeFocusLost
+
+    private void txt_produtosQuantidadeMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txt_produtosQuantidadeMousePressed
+        if (txt_produtosQuantidade.getText().equals("Insira a quantidade")) {
+            txt_produtosQuantidade.setText("");
+            txt_produtosQuantidade.setForeground(Color.BLACK);
+        }
+    }//GEN-LAST:event_txt_produtosQuantidadeMousePressed
+
+    private void btn_produtosEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_produtosEditarActionPerformed
+        String busca = JOptionPane.showInputDialog(this, "Informe o CÓDIGO ou Nome do produto que deseja editar:");
+
+        if (busca == null || busca.trim().isEmpty()) {
+            return; // Cancelou ou vazio
+        }
+
+        String url = "jdbc:mysql://localhost:3306/gestor_estoque"; 
+        String usuario = "root"; 
+        String senha = "1234";   
+
+        try (Connection conn = DriverManager.getConnection(url, usuario, senha)) {
+
+            String sql = "SELECT * FROM produtos WHERE codigo_produto = ? OR nome_produto = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, busca);
+            ps.setString(2, busca);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                // Produto encontrado, pergunta qual campo deseja editar
+                String[] opcoes = {"Nome", "Código", "Quantidade", "Valor Compra", "Valor Venda", "Validade", "Fornecedor"};
+                String campo = (String) JOptionPane.showInputDialog(
+                        this, 
+                        "Selecione o campo que deseja editar:", 
+                        "Editar produto", 
+                        JOptionPane.QUESTION_MESSAGE, 
+                        null, 
+                        opcoes, 
+                        opcoes[0]);
+
+                if (campo != null) {
+                    String novoValor = JOptionPane.showInputDialog(this, "Informe o novo valor para " + campo + ":");
+                    if (novoValor != null && !novoValor.trim().isEmpty()) {
+
+                        String colunaDB = switch(campo) {
+                            case "Nome" -> "nome_produto";
+                            case "Código" -> "codigo_produto";
+                            case "Quantidade" -> "quantidade_estoque";
+                            case "Valor Compra" -> "valor_compra";
+                            case "Valor Venda" -> "valor_venda";
+                            case "Validade" -> "validade_produto";
+                            case "Fornecedor" -> "id_fornecedor";
+                            default -> "";
+                        };
+
+                        String sqlUpdate = "UPDATE produtos SET " + colunaDB + " = ? WHERE id_produto = ?";
+                        PreparedStatement psUpdate = conn.prepareStatement(sqlUpdate);
+
+                        // Tratar tipos de dados
+                        switch(campo) {
+                            case "Quantidade" -> psUpdate.setInt(1, Integer.parseInt(novoValor));
+                            case "Valor Compra", "Valor Venda" -> psUpdate.setBigDecimal(1, new java.math.BigDecimal(novoValor));
+                            case "Validade" -> {
+                                java.sql.Date sqlDate = java.sql.Date.valueOf(
+                                    java.time.LocalDate.parse(novoValor)); // formato YYYY-MM-DD
+                                psUpdate.setDate(1, sqlDate);
+                            }
+                            case "Fornecedor" -> psUpdate.setInt(1, Integer.parseInt(novoValor)); // id do fornecedor
+                            default -> psUpdate.setString(1, novoValor);
+                        }
+
+                        psUpdate.setInt(2, rs.getInt("id_produto"));
+                        psUpdate.executeUpdate();
+                        JOptionPane.showMessageDialog(this, "Produto atualizado com sucesso!");
+                    }
+                }
+
+            } else {
+                JOptionPane.showMessageDialog(this, "Produto não encontrado!");
+            }
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Erro ao acessar o banco: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_btn_produtosEditarActionPerformed
+
+    private void btn_produtosExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_produtosExcluirActionPerformed
+        String url = "jdbc:mysql://localhost:3306/gestor_estoque"; 
+        String usuario = "root"; 
+        String senha = "1234";   
+
+        // Só Administrador pode excluir
+        if (!"Administrador".equals(perfil)) {
+            JOptionPane.showMessageDialog(this, "Você não tem permissão para excluir um produto.");
+            return;
+        }
+
+        String dado = JOptionPane.showInputDialog(this, "Informe o CÓDIGO ou Nome do produto a ser excluído:");
+
+        if (dado != null && !dado.trim().isEmpty()) {
+            String nomeProduto = null;
+            int idProduto = -1;
+
+            // Primeiro, buscar o produto pelo código ou nome
+            String sqlBuscar = "SELECT id_produto, nome_produto FROM produtos WHERE codigo_produto = ? OR nome_produto = ?";
+
+            try (Connection conn = DriverManager.getConnection(url, usuario, senha);
+                 PreparedStatement pstBuscar = conn.prepareStatement(sqlBuscar)) {
+
+                pstBuscar.setString(1, dado);
+                pstBuscar.setString(2, dado);
+
+                ResultSet rs = pstBuscar.executeQuery();
+                if (rs.next()) {
+                    idProduto = rs.getInt("id_produto");
+                    nomeProduto = rs.getString("nome_produto");
+                } else {
+                    JOptionPane.showMessageDialog(this, "Produto não encontrado.");
+                    return;
+                }
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Erro ao acessar o banco: " + e.getMessage());
+                return;
+            }
+
+            // Confirmar exclusão usando o nome do produto
+            int confirm = JOptionPane.showConfirmDialog(this, 
+                            "Tem certeza que deseja excluir o produto: " + nomeProduto + "?",
+                            "Confirmar exclusão",
+                            JOptionPane.YES_NO_OPTION);
+
+            if (confirm == JOptionPane.YES_OPTION) {
+                // Deletar pelo id_produto
+                String sqlDeletar = "DELETE FROM produtos WHERE id_produto = ?";
+
+                try (Connection conn = DriverManager.getConnection(url, usuario, senha);
+                     PreparedStatement pstDeletar = conn.prepareStatement(sqlDeletar)) {
+
+                    pstDeletar.setInt(1, idProduto);
+                    pstDeletar.executeUpdate();
+
+                    JOptionPane.showMessageDialog(this, "Produto excluído com sucesso!");
+
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    JOptionPane.showMessageDialog(this, "Erro ao excluir o produto: " + e.getMessage());
+                }
+            }
+        }       
+    }//GEN-LAST:event_btn_produtosExcluirActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -394,10 +726,12 @@ public class CadastroProdutos extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JTextField txt_produtosCodigo;
     private javax.swing.JTextField txt_produtosCompra;
     private javax.swing.JTextField txt_produtosFornecedor;
     private javax.swing.JTextField txt_produtosNome;
+    private javax.swing.JTextField txt_produtosQuantidade;
     private javax.swing.JTextField txt_produtosValidade;
     private javax.swing.JTextField txt_produtosVenda;
     // End of variables declaration//GEN-END:variables

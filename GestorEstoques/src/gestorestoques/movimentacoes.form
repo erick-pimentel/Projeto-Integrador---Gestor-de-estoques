@@ -48,14 +48,12 @@
                                   <Component id="jLabel2" alignment="0" max="32767" attributes="0"/>
                                   <Component id="jLabel3" alignment="0" max="32767" attributes="0"/>
                                   <Component id="jLabel4" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="jLabel5" alignment="0" max="32767" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="txt_movimentacoesTipo" max="32767" attributes="0"/>
+                                  <Component id="txt_movimentacoesTipo" pref="230" max="32767" attributes="0"/>
                                   <Component id="txt_movimentacoesProduto" max="32767" attributes="0"/>
                                   <Component id="txt_movimentacoesQuantidade" max="32767" attributes="0"/>
-                                  <Component id="txt_movimentacoesData" pref="230" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -92,12 +90,7 @@
                   <Component id="txt_movimentacoesQuantidade" max="32767" attributes="0"/>
                   <Component id="jLabel4" max="32767" attributes="0"/>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                  <Component id="txt_movimentacoesData" max="32767" attributes="0"/>
-                  <Component id="jLabel5" max="32767" attributes="0"/>
-              </Group>
-              <EmptySpace min="18" pref="18" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="46" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="btn_movimentacoesCancel" min="-2" pref="45" max="-2" attributes="0"/>
                   <Component id="btn_movimentacoesRegistrar" alignment="1" min="-2" pref="45" max="-2" attributes="0"/>
@@ -133,11 +126,6 @@
         <Property name="text" type="java.lang.String" value="QUANTIDADE:"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JLabel" name="jLabel5">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="DATA:"/>
-      </Properties>
-    </Component>
     <Component class="javax.swing.JTextField" name="txt_movimentacoesTipo">
       <Events>
         <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txt_movimentacoesTipoFocusLost"/>
@@ -154,12 +142,6 @@
       <Events>
         <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txt_movimentacoesQuantidadeFocusLost"/>
         <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="txt_movimentacoesQuantidadeMousePressed"/>
-      </Events>
-    </Component>
-    <Component class="javax.swing.JTextField" name="txt_movimentacoesData">
-      <Events>
-        <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txt_movimentacoesDataFocusLost"/>
-        <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="txt_movimentacoesDataMousePressed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btn_movimentacoesRegistrar">
@@ -180,6 +162,9 @@
         </Property>
         <Property name="text" type="java.lang.String" value="CANCELAR"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_movimentacoesCancelActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btn_movimentacoesVoltar">
       <Properties>

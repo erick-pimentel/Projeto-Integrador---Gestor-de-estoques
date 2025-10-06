@@ -35,12 +35,15 @@ public class gestaoDeUser extends javax.swing.JFrame {
     String user = "root"; // seu usuário
     String password = "1234"; // sua senha
     Connection conn;
-    private String perfil;
     
-    public gestaoDeUser(String perfil) {
+    private String perfil;
+    private int idUsuario;
+    
+    public gestaoDeUser(String perfil, int idUsuario) {
         initComponents();
         
         this.perfil=perfil;
+        this.idUsuario=idUsuario;
         
         conectar();
         carregarUsuarios();
@@ -374,7 +377,7 @@ public class gestaoDeUser extends javax.swing.JFrame {
     }//GEN-LAST:event_btn_userAddActionPerformed
 
     private void btn_menuVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_menuVoltarActionPerformed
-        menuView menu = new menuView(this.perfil);
+        menuView menu = new menuView(this.perfil, this.idUsuario);
         menu.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btn_menuVoltarActionPerformed

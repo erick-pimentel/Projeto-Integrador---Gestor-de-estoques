@@ -25,11 +25,13 @@ public class cadastroFornecedor extends javax.swing.JFrame {
      */
     
     private String perfil;
+    private int idUsuario;
     
-    public cadastroFornecedor(String perfil) {
+    public cadastroFornecedor(String perfil, int idUsuario) {
         initComponents();
         
         this.perfil=perfil;
+        this.idUsuario=idUsuario;
         
         txt_fornecedorNome.setText("Insira o nome do fornecedor");
         txt_fornecedorNome.setForeground(Color.BLACK);
@@ -224,7 +226,7 @@ public class cadastroFornecedor extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_fornecedorVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_fornecedorVoltarActionPerformed
-        menuView menu = new menuView(this.perfil);
+        menuView menu = new menuView(this.perfil, this.idUsuario);
         menu.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btn_fornecedorVoltarActionPerformed
@@ -415,7 +417,7 @@ public class cadastroFornecedor extends javax.swing.JFrame {
         Connection conn;
         
         if ("Administrador".equals(perfil)){
-           String dado = JOptionPane.showInputDialog(this, "Informe o CNPJ ou Nome do fornecedor a ser excluído:");
+            String dado = JOptionPane.showInputDialog(this, "Informe o CNPJ ou Nome do fornecedor a ser excluído:");
 
             if(dado != null && !dado.trim().isEmpty()){
                 int confirm = JOptionPane.showConfirmDialog(this, 

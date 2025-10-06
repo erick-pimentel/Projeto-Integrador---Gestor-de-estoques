@@ -199,7 +199,8 @@ public class loginView extends javax.swing.JFrame {
         
         if(user.equals("admin") && pass.equals("123")) {
             perfil = "Administrador";
-            menuView menu = new menuView(perfil);
+            int idUsuario = 0;
+            menuView menu = new menuView(perfil, idUsuario);
             menu.setVisible(true);
             this.dispose();
             return;
@@ -220,8 +221,9 @@ public class loginView extends javax.swing.JFrame {
                     return;
                 }
 
+                int idUsuario = rs.getInt("id_usuario");
                 perfil = rs.getString("perfil_usuario");
-                menuView menu = new menuView(perfil);
+                menuView menu = new menuView(perfil, idUsuario);
                 menu.setVisible(true);
                 this.dispose();
 
@@ -253,14 +255,14 @@ public class loginView extends javax.swing.JFrame {
     }//GEN-LAST:event_txt_userMouseClicked
 
     private void txt_userMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txt_userMousePressed
-        if (txt_user.getText().equals("Insira seu nome de usuário")) {
+        if (!txt_user.getText().equals("")) {
             txt_user.setText("");
             txt_user.setForeground(Color.BLACK);
         }
     }//GEN-LAST:event_txt_userMousePressed
 
     private void txt_passMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txt_passMousePressed
-        if (txt_pass.getText().equals("Insira sua senha")) {
+        if (!txt_pass.getText().equals("")) {
             txt_pass.setText("");
             txt_pass.setForeground(Color.BLACK);
         }
@@ -269,7 +271,7 @@ public class loginView extends javax.swing.JFrame {
     private void txt_passFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txt_passFocusLost
         if (txt_pass.getText().isEmpty()) {
             txt_pass.setText("Insira sua senha");
-            txt_pass.setForeground(Color.GRAY);
+            txt_pass.setForeground(Color.BLACK);
         }
     }//GEN-LAST:event_txt_passFocusLost
 

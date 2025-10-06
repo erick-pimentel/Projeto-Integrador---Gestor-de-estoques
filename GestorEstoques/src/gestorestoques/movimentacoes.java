@@ -5,6 +5,12 @@
 package gestorestoques;
 
 import java.awt.Color;
+import javax.swing.JOptionPane;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  *
@@ -17,13 +23,15 @@ public class movimentacoes extends javax.swing.JFrame {
      */
     
     private String perfil;
+    private int idUsuario;
     
-    public movimentacoes(String perfil) {
+    public movimentacoes(String perfil, int idUsuario) {
         initComponents();
         
         this.perfil=perfil;
+        this.idUsuario=idUsuario;
         
-        txt_movimentacoesTipo.setText("Entrada / Saida / Outro");
+        txt_movimentacoesTipo.setText("Entrada / Saida / Ajuste");
         txt_movimentacoesTipo.setForeground(Color.BLACK);
         
         txt_movimentacoesProduto.setText("Insira o nome do produto movimentado");
@@ -31,9 +39,6 @@ public class movimentacoes extends javax.swing.JFrame {
 
         txt_movimentacoesQuantidade.setText("Insira a quantidade movimentada");
         txt_movimentacoesQuantidade.setForeground(Color.BLACK);
-                
-        txt_movimentacoesData.setText("Data da movimentação ex:01/03/2025");
-        txt_movimentacoesData.setForeground(Color.BLACK);
     }
 
     /**
@@ -50,11 +55,9 @@ public class movimentacoes extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
         txt_movimentacoesTipo = new javax.swing.JTextField();
         txt_movimentacoesProduto = new javax.swing.JTextField();
         txt_movimentacoesQuantidade = new javax.swing.JTextField();
-        txt_movimentacoesData = new javax.swing.JTextField();
         btn_movimentacoesRegistrar = new javax.swing.JButton();
         btn_movimentacoesCancel = new javax.swing.JButton();
         btn_movimentacoesVoltar = new javax.swing.JButton();
@@ -71,8 +74,6 @@ public class movimentacoes extends javax.swing.JFrame {
         jLabel3.setText("PRODUTO:");
 
         jLabel4.setText("QUANTIDADE:");
-
-        jLabel5.setText("DATA:");
 
         txt_movimentacoesTipo.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -107,17 +108,6 @@ public class movimentacoes extends javax.swing.JFrame {
             }
         });
 
-        txt_movimentacoesData.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                txt_movimentacoesDataFocusLost(evt);
-            }
-        });
-        txt_movimentacoesData.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                txt_movimentacoesDataMousePressed(evt);
-            }
-        });
-
         btn_movimentacoesRegistrar.setBackground(new java.awt.Color(0, 255, 30));
         btn_movimentacoesRegistrar.setText("REGISTRAR");
         btn_movimentacoesRegistrar.addActionListener(new java.awt.event.ActionListener() {
@@ -128,6 +118,11 @@ public class movimentacoes extends javax.swing.JFrame {
 
         btn_movimentacoesCancel.setBackground(new java.awt.Color(255, 0, 0));
         btn_movimentacoesCancel.setText("CANCELAR");
+        btn_movimentacoesCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_movimentacoesCancelActionPerformed(evt);
+            }
+        });
 
         btn_movimentacoesVoltar.setBackground(new java.awt.Color(0, 200, 0));
         btn_movimentacoesVoltar.setText("VOLTAR");
@@ -157,14 +152,12 @@ public class movimentacoes extends javax.swing.JFrame {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(txt_movimentacoesTipo)
+                                    .addComponent(txt_movimentacoesTipo, javax.swing.GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE)
                                     .addComponent(txt_movimentacoesProduto)
-                                    .addComponent(txt_movimentacoesQuantidade)
-                                    .addComponent(txt_movimentacoesData, javax.swing.GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE)))))
+                                    .addComponent(txt_movimentacoesQuantidade)))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(110, 110, 110)
                         .addComponent(btn_movimentacoesVoltar, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -189,11 +182,7 @@ public class movimentacoes extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(txt_movimentacoesQuantidade)
                     .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(txt_movimentacoesData)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
+                .addGap(46, 46, 46)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btn_movimentacoesCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_movimentacoesRegistrar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -206,24 +195,98 @@ public class movimentacoes extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_movimentacoesRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_movimentacoesRegistrarActionPerformed
-        // TODO add your handling code here:
+        String tipo = txt_movimentacoesTipo.getText().trim(); // Entrada, Saída, Ajuste
+        String quantidadeStr = txt_movimentacoesQuantidade.getText().trim();
+        String codigoProduto = txt_movimentacoesProduto.getText().trim(); // JTextField do produto
+
+        if(tipo.isEmpty() || quantidadeStr.isEmpty() || codigoProduto.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Preencha todos os campos de movimentação!");
+            return;
+        }
+
+        int quantidade;
+        try {
+            quantidade = Integer.parseInt(quantidadeStr);
+            if(quantidade <= 0) throw new NumberFormatException();
+        } catch(NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Informe uma quantidade válida!");
+            return;
+        }
+
+        // Conectar ao banco
+        String url = "jdbc:mysql://localhost:3306/gestor_estoque";
+        String usuarioDB = "root";
+        String senhaDB = "1234";
+
+        try (Connection conn = DriverManager.getConnection(url, usuarioDB, senhaDB)) {
+
+            // 1️⃣ Verificar se o produto existe
+            String sqlProd = "SELECT id_produto, nome_produto, quantidade_estoque FROM produtos WHERE codigo_produto = ?";
+            PreparedStatement pstProd = conn.prepareStatement(sqlProd);
+            pstProd.setString(1, codigoProduto);
+            ResultSet rs = pstProd.executeQuery();
+
+            if(!rs.next()) {
+                JOptionPane.showMessageDialog(this, "Produto não encontrado!");
+                return;
+            }
+
+            int idProduto = rs.getInt("id_produto");
+            int estoqueAtual = rs.getInt("quantidade_estoque");
+            String nomeProduto = rs.getString("nome_produto");
+
+            // 2️⃣ Verificar estoque para saída
+            if(tipo.equalsIgnoreCase("Saída") && quantidade > estoqueAtual) {
+                JOptionPane.showMessageDialog(this, "Quantidade maior que estoque disponível!");
+                return;
+            }
+
+            int novoEstoque = tipo.equalsIgnoreCase("Entrada") ? estoqueAtual + quantidade :
+                             tipo.equalsIgnoreCase("Saída") ? estoqueAtual - quantidade : estoqueAtual;
+
+            // 3️⃣ Inserir movimentação na tabela movimentacoes
+            String sqlMov = "INSERT INTO movimentacoes (id_usuario, tipo_movimentacao, quantidade_movimentacao) VALUES (?, ?, ?)";
+            PreparedStatement pstMov = conn.prepareStatement(sqlMov);
+            pstMov.setInt(1, idUsuario);
+            pstMov.setString(2, tipo);
+            pstMov.setInt(3, quantidade); // quantidade agora é inserida
+            pstMov.executeUpdate();
+
+            // 4️⃣ Atualizar estoque do produto
+            String sqlAtualizaEstoque = "UPDATE produtos SET quantidade_estoque = ? WHERE id_produto = ?";
+            PreparedStatement pstAtualiza = conn.prepareStatement(sqlAtualizaEstoque);
+            pstAtualiza.setInt(1, novoEstoque);
+            pstAtualiza.setInt(2, idProduto);
+            pstAtualiza.executeUpdate();
+
+            JOptionPane.showMessageDialog(this, "Movimentação registrada para o produto: " + nomeProduto);
+
+            // Limpar campos
+            txt_movimentacoesTipo.setText("");
+            txt_movimentacoesQuantidade.setText("");
+            txt_movimentacoesProduto.setText("");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Erro ao registrar movimentação: " + e.getMessage());
+        }
     }//GEN-LAST:event_btn_movimentacoesRegistrarActionPerformed
 
     private void btn_movimentacoesVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_movimentacoesVoltarActionPerformed
-        menuView menu = new menuView(this.perfil);
+        menuView menu = new menuView(this.perfil, this.idUsuario);
         menu.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btn_movimentacoesVoltarActionPerformed
 
     private void txt_movimentacoesTipoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txt_movimentacoesTipoFocusLost
         if (txt_movimentacoesTipo.getText().isEmpty()) {
-            txt_movimentacoesTipo.setText("Entrada / Saida / Outro");
+            txt_movimentacoesTipo.setText("Entrada / Saida / Ajuste");
             txt_movimentacoesTipo.setForeground(Color.BLACK);
         }
     }//GEN-LAST:event_txt_movimentacoesTipoFocusLost
 
     private void txt_movimentacoesTipoMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txt_movimentacoesTipoMousePressed
-        if (txt_movimentacoesTipo.getText().equals("Entrada / Saida / Outro")) {
+        if (txt_movimentacoesTipo.getText().equals("Entrada / Saida / Ajuste")) {
             txt_movimentacoesTipo.setText("");
             txt_movimentacoesTipo.setForeground(Color.BLACK);
         }
@@ -257,19 +320,92 @@ public class movimentacoes extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_txt_movimentacoesQuantidadeMousePressed
 
-    private void txt_movimentacoesDataFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txt_movimentacoesDataFocusLost
-        if (txt_movimentacoesData.getText().isEmpty()) {
-            txt_movimentacoesData.setText("Data da movimentação ex:01/03/2025");
-            txt_movimentacoesData.setForeground(Color.BLACK);
-        }
-    }//GEN-LAST:event_txt_movimentacoesDataFocusLost
+    private void btn_movimentacoesCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_movimentacoesCancelActionPerformed
+        String url = "jdbc:mysql://localhost:3306/gestor_estoque";
+        String usuarioDB = "root";
+        String senhaDB = "1234";
 
-    private void txt_movimentacoesDataMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txt_movimentacoesDataMousePressed
-        if (txt_movimentacoesData.getText().equals("Data da movimentação ex:01/03/2025")) {
-            txt_movimentacoesData.setText("");
-            txt_movimentacoesData.setForeground(Color.BLACK);
+        try (Connection conn = DriverManager.getConnection(url, usuarioDB, senhaDB)) {
+
+            // 1️⃣ Buscar todas as movimentações
+            String sql = "SELECT m.id_movimentacao, m.tipo_movimentacao, m.quantidade_movimentacao, p.nome_produto " +
+                         "FROM movimentacoes m " +
+                         "JOIN produtos p ON p.id_produto = m.id_usuario " + // ajuste se houver relação
+                         "ORDER BY m.data_movimentacao DESC";
+            PreparedStatement pst = conn.prepareStatement(sql);
+            ResultSet rs = pst.executeQuery();
+
+            StringBuilder listaMov = new StringBuilder("Movimentações cadastradas:\n\n");
+            while (rs.next()) {
+                int id = rs.getInt("id_movimentacao");
+                String produto = rs.getString("nome_produto");
+                String tipo = rs.getString("tipo_movimentacao");
+                int qtd = rs.getInt("quantidade_movimentacao");
+
+                listaMov.append("ID: ").append(id)
+                        .append(" | Produto: ").append(produto)
+                        .append(" | Tipo: ").append(tipo)
+                        .append(" | Quantidade: ").append(qtd)
+                        .append("\n");
+            }
+
+            rs.close();
+            pst.close();
+
+            // Mostrar lista para o usuário
+            JOptionPane.showMessageDialog(this, listaMov.toString());
+
+            // 2️⃣ Perguntar qual movimentação deseja cancelar
+            String inputId = JOptionPane.showInputDialog(this, "Informe o ID da movimentação que deseja cancelar:");
+            if (inputId == null || inputId.trim().isEmpty()) return;
+
+            int idMovimentacao;
+            try {
+                idMovimentacao = Integer.parseInt(inputId.trim());
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "ID inválido!");
+                return;
+            }
+
+            // 3️⃣ Confirmar se o usuário realmente deseja excluir
+            String sqlVerifica = "SELECT m.id_movimentacao, m.tipo_movimentacao, m.quantidade_movimentacao, p.nome_produto " +
+                                 "FROM movimentacoes m " +
+                                 "JOIN produtos p ON p.id_produto = m.id_usuario " + // ajuste se houver relação
+                                 "WHERE m.id_movimentacao = ?";
+            PreparedStatement pstVerifica = conn.prepareStatement(sqlVerifica);
+            pstVerifica.setInt(1, idMovimentacao);
+            ResultSet rsVerifica = pstVerifica.executeQuery();
+
+            if (!rsVerifica.next()) {
+                JOptionPane.showMessageDialog(this, "Movimentação não encontrada!");
+                return;
+            }
+
+            String produto = rsVerifica.getString("nome_produto");
+            String tipo = rsVerifica.getString("tipo_movimentacao");
+            int quantidade = rsVerifica.getInt("quantidade_movimentacao");
+
+            int confirm = JOptionPane.showConfirmDialog(this,
+                    "Deseja realmente cancelar a movimentação do produto: " + produto +
+                    "\nTipo: " + tipo + "\nQuantidade: " + quantidade + "?",
+                    "Confirmar cancelamento",
+                    JOptionPane.YES_NO_OPTION);
+
+            if (confirm != JOptionPane.YES_OPTION) return;
+
+            // 4️⃣ Excluir movimentação
+            String sqlDelete = "DELETE FROM movimentacoes WHERE id_movimentacao = ?";
+            PreparedStatement pstDelete = conn.prepareStatement(sqlDelete);
+            pstDelete.setInt(1, idMovimentacao);
+            pstDelete.executeUpdate();
+
+            JOptionPane.showMessageDialog(this, "Movimentação cancelada com sucesso!");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Erro ao acessar o banco de dados: " + e.getMessage());
         }
-    }//GEN-LAST:event_txt_movimentacoesDataMousePressed
+    }//GEN-LAST:event_btn_movimentacoesCancelActionPerformed
 
     /**
      * @param args the command line arguments
@@ -315,8 +451,6 @@ public class movimentacoes extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JTextField txt_movimentacoesData;
     private javax.swing.JTextField txt_movimentacoesProduto;
     private javax.swing.JTextField txt_movimentacoesQuantidade;
     private javax.swing.JTextField txt_movimentacoesTipo;
