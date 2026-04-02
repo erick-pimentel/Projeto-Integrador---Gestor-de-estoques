@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login – Gestor de Estoques</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <main class="login-wrapper">
+    <div class="login-card">
+      <div class="login-header">
+        <div class="app-logo" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+               stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M20 7H4a2 2 0 00-2 2v9a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z" />
+            <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2" />
+            <line stroke-linecap="round" stroke-linejoin="round" x1="12" y1="12" x2="12" y2="17" />
+            <line stroke-linecap="round" stroke-linejoin="round" x1="9" y1="14" x2="15" y2="14" />
+          </svg>
+        </div>
+        <h1>Gestor de Estoques</h1>
+        <p>Informe suas credenciais para acessar o sistema</p>
+      </div>
+
+      <form id="loginForm" action="dashboard.html" method="get" novalidate>
+        <div style="margin-bottom: 1rem;">
+          <label for="usuario">Usuário</label>
+          <input
+            type="text"
+            id="usuario"
+            name="usuario"
+            class="form-control"
+            style="width:100%;"
+            placeholder="Nome de usuário"
+            autocomplete="username"
+            required
+          />
+        </div>
+
+        <div style="margin-bottom: 1.25rem;">
+          <label for="senha">Senha</label>
+          <input
+            type="password"
+            id="senha"
+            name="senha"
+            class="form-control"
+            style="width:100%;"
+            placeholder="••••••••"
+            autocomplete="current-password"
+            required
+          />
+        </div>
+
+        <button type="submit" class="btn-login">Confirmar</button>
+
+        <p class="msg-erro" id="msgErro" role="alert" aria-live="polite"></p>
+      </form>
+    </div>
+  </main>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', function (e) {
+      var user = document.getElementById('usuario').value.trim();
+      var pass = document.getElementById('senha').value.trim();
+      var msgErro = document.getElementById('msgErro');
+
+      if (!user || !pass) {
+        e.preventDefault();
+        msgErro.textContent = 'Preencha usuário e senha!';
+      } else {
+        msgErro.textContent = '';
+      }
+    });
+  </script>
+</body>
+</html>
